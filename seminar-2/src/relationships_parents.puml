@@ -1,0 +1,48 @@
+/'
+**Родственные связи**:
+- У каждого человека есть два биологических родителя: отец (мужчина) и мать (женщина).
+'/
+
+@startuml ERD_Family
+
+!function $setBold($a)
+!return "<b>" + $a + "</b>"
+!endfunction
+
+skinparam BackgroundColor SeaShell
+skinparam LegendBackgroundColor MistyRose
+skinparam LegendBorderColor PaleVioletRed
+skinparam LegendFontColor PaleVioletRed
+
+skinparam Class {
+    HeaderBackgroundColor PaleGreen
+}
+skinparam TitleFontColor Sienna
+
+Header Family Ties ER-diagram
+Title ER-diagram "Family Ties"
+
+' ------------------------- Entities -------------------------
+entity "$setBold("Person")" as Person
+entity "$setBold("Man")" as Man
+entity "$setBold("Woman")" as Woman
+
+' ------------------------- Inheritances -------------------------
+Person  <|-- Man
+Person  <|-- Woman
+
+' ------------------------- Relations -------------------------
+Man     ||--o{  Person : "father"
+Woman   ||--o{  Person : "mother"
+
+' ------------------------- Legend -------------------------
+legend right
+$setBold("Symbols:")
+|| or o|    - one-to-one (optional - neccessary)
+|o or |{    - one-to-many (optional - neccessary)
+}o or |{    - many-to-many (optional - neccessary)
+}o--o{      - many-to-many (optional)
+<|--        - inheritance / generalization
+end legend
+
+@enduml

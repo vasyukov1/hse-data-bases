@@ -1,0 +1,51 @@
+Table Publisher {
+  Publisher_id uuid [primary key]
+  Name varchar [not null]
+  Address varchar [not null]
+}
+
+Table Book {
+  ISBN uuid [primary key]
+  Title varchar [not null]
+  Author varchar [not null]
+  Year integer [not null]
+  Number_of_pages integer [not null]
+  Publisher_id uuid [ref: > Publisher.Publisher_id]
+}
+
+Table Category {
+  Category_id uuid [primary key]
+  Category_name varchar [not null]
+  Parent_id uuid [ref: > Category.Category_id]
+}
+
+Table BookCategory {
+  Book_id uuid [ref: > Book.ISBN]
+  Category_id uuid [ref: > Category.Category_id]
+  indexes {
+    (Book_id, Category_id) [primary key]
+  }
+}
+
+Table Copy {
+  Copy_id uuid [primary key]
+  Book_id uuid [ref: > Book.ISBN]
+  Position varchar
+}
+
+Table Reader {
+  Reader_id uuid [primary key]
+  First_name varchar [not null]
+  Last_name varchar [not null]
+  Address varchar [not null]
+  Birthday date
+}
+
+Table Loan {
+  Loan_id uuid [primary key]
+  Reader_id uuid [ref: > Reader.Reader_id]
+  Copy_id uuid [ref: > Copy.Copy_id]
+  Loan_date date [not null]
+  Due_date date [not null]
+  Return_date date
+}

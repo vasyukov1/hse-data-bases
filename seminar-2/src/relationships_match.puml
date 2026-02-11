@@ -1,0 +1,47 @@
+/'
+**Спортивные матчи**:
+- В системе хранится информация о матчах между командами.
+- Каждый матч проходит между двумя командами под руководством одного арбитра.
+- Команда не играет сама с собой и может участвовать в не ограниченном числе матчей.
+- Арбитр может судить разные матчи.
+'/
+
+@startuml ERD_Sport
+
+!function $setBold($a)
+!return "<b>" + $a + "</b>"
+!endfunction
+
+skinparam BackgroundColor SeaShell
+skinparam LegendBackgroundColor MistyRose
+skinparam LegendBorderColor PaleVioletRed
+skinparam LegendFontColor PaleVioletRed
+
+skinparam Class {
+    HeaderBackgroundColor PaleGreen
+}
+skinparam TitleFontColor Sienna
+
+Header Sports Match ER-diagram
+Title ER-diagram "Sports Match Database"
+
+' ------------------------- Entities -------------------------
+entity "$setBold("Team")" as Team
+entity "$setBold("Referee")" as Referee
+entity "$setBold("Match")" as Match
+
+' ------------------------- Relations -------------------------
+Team    ||--o{  Match : "team 1"
+Team    ||--o{  Match : "team 2"
+Referee ||--o{  Match : "judges"
+
+' ------------------------- Legend -------------------------
+legend right
+$setBold("Symbols:")
+|| or o|    - one-to-one (optional - neccessary)
+|o or |{    - one-to-many (optional - neccessary)
+}o or |{    - many-to-many (optional - neccessary)
+}o--o{      - many-to-many (optional)
+end legend
+
+@enduml

@@ -1,0 +1,46 @@
+Table Station {
+    station_number integer [primary key]
+    station_name varchar [not null]
+}
+
+Table Room {
+    room_number integer [primary key]
+    bed_count integer [not null]
+    station_number integer [ref: > Station.station_number, not null]
+}
+
+Table Patient {
+    patient_number integer [primary key]
+    patient_name varchar [not null]
+    disease varchar
+    doctor_number integer [ref: > Doctor.personell_number, not null]
+}
+
+Table Admission {
+    patient_number integer [ref: > Patient.patient_number, not null]
+    room_number integer [ref: > Room.room_number, not null]
+    from date [not null]
+    to date [not null]
+
+    indexes {
+        (patient_number, room_number) [pk]
+    }
+}
+
+
+Table StationPersonell {
+    personell_number integer [primary key]
+    name_count integer [not null]
+    station_number integer [ref: > Station.station_number, not null]
+}
+
+Table Caregiver {
+    personell_number integer [ref: > StationPersonell.personell_number, primary key]
+    qualification varchar [not null]
+}
+
+Table Doctor {
+    personell_number integer [ref: > StationPersonell.personell_number, primary key]
+    area varchar [not null]
+    rank varchar [not null]
+}

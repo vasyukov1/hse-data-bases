@@ -1,0 +1,105 @@
+/'
+Задание:
+В библиотеке хранятся книги (издания). Каждая книга (издание) имеет уникальный идентификатор, название, автора, год
+издания и количество страниц. Книги издаются издательствами, у которых есть название и адрес. В библиотеке есть
+экземпляры книг (физические/электронные копии издания). Каждый экземпляр имеет уникальный идентификатор и положение на
+полке. Экземпляр книги связан с конкретной книгой. Книги могут принадлежать одной или нескольким категориям. Категории
+могут быть вложенными (одна категория может быть подкатегорией другой). У каждой категории есть название. В библиотеке
+есть читатели. Каждый читатель имеет уникальный идентификатор, имя, фамилию, адрес и дату рождения. Читатель может брать
+книги на определенный срок. Для каждой выдачи книги записывается дата, когда книга была взята, планируемая дата возврата
+и фактическая дата возврата (если книга уже возвращена).
+'/
+
+@startuml ERD_Library
+
+!function $pk($a)
+!return "<color:RoyalBlue>" + $a + "<<PK>></color>"
+!endfunction
+
+!function $unique($a)
+!return "<color:Crimson>" + $a + "<<unique>></color>"
+!endfunction
+
+!function $setBold($a)
+!return "<b>" + $a + "</b>"
+!endfunction
+
+skinparam BackgroundColor SeaShell
+skinparam LegendBackgroundColor MistyRose
+skinparam LegendBorderColor PaleVioletRed
+skinparam LegendFontColor PaleVioletRed
+
+skinparam Class {
+    HeaderBackgroundColor PaleGreen
+}
+skinparam TitleFontColor Sienna
+
+Header Library ER-diagram
+Title ER-diagram "Library Database"
+
+' ------------------------- Entities -------------------------
+entity "$setBold("Book")" as Book {
+    * $pk("book_id")
+    --
+    * name
+    * author
+    * year
+    pages
+}
+
+entity "$setBold("Publisher")" as Publisher {
+    * $pk("publisher_id")
+    --
+    * name
+    * address
+}
+
+entity "$setBold("Book Copy")" as Copy {
+    * $pk("copy_id")
+    --
+    * position
+    * format
+}
+
+entity "$setBold("Book Category")" as Category {
+    * $pk("category_id")
+    --
+    * name
+}
+
+entity "$setBold("Reader")" as Reader {
+    * $pk("reader_id")
+    --
+    * first_name
+    * last_name
+    * address
+    birth_date
+}
+
+entity "$setBold("Book Loan")" as Loan {
+    * $pk("loan_id")
+    --
+    * date_taken
+    * due_date
+    return_date
+}
+
+' ------------------------- Relations -------------------------
+Publisher   ||--o{ Book : "publishes"
+Book        ||--o{ Copy : "has copies"
+Book        }o--o{ Category : "refers to"
+Category    ||--o{ Category : "subcategory"
+
+Reader      ||--o{ Loan : "takes"
+Copy        ||--o{ Loan : "given"
+
+' ------------------------- Legend -------------------------
+legend right
+$setBold("Symbols:")
+|| or o|    - one-to-one (optional - neccessary)
+|o or |{    - one-to-many (optional - neccessary)
+}o or |{    - many-to-many (optional - neccessary)
+}o--o{      - many-to-many (optional)
+end legend
+
+@enduml

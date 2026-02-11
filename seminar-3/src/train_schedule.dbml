@@ -1,0 +1,43 @@
+Table Station {
+    station_name varchar [primary key]
+    track_count integer [not null]
+    city_id uuid [ref: > City.city_id, not null]
+}
+
+Table City {
+    city_id uuid [primary key]
+    city_name varchar [not null]
+    region varchar [not null]
+
+    indexes {
+        (city_name, region) [unique]
+    }
+}
+
+Table Train {
+    train_number integer [primary key]
+    length integer [not null]
+}
+
+Table Route {
+    route_id uuid [primary key]
+    start_station_id uuid [not null]
+    end_station_id uuid [not null]
+}
+
+Table RouteStop {
+    route_id uuid [ref: > Route.route_id, not null, primary key]
+    station_name varchar [ref: > Station.station_name, not null, primary key]
+
+    indexes {
+        (route_id, station_name) [pk]
+    }
+}
+
+Table TrainStop {
+    train_number integer [ref: > Train.train_number, not null]
+    station_name varchar [ref: > Station.station_name]
+    arrival timestamp
+    departure timestamp
+}
+

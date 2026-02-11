@@ -1,0 +1,50 @@
+/'
+**Адреса**:
+- Квартира находится в доме.
+- Дом расположен на улице.
+- Улица находится в городе.
+- Город находится в стране.
+'/
+
+@startuml ERD_Address
+
+!function $setBold($a)
+!return "<b>" + $a + "</b>"
+!endfunction
+
+skinparam BackgroundColor SeaShell
+skinparam LegendBackgroundColor MistyRose
+skinparam LegendBorderColor PaleVioletRed
+skinparam LegendFontColor PaleVioletRed
+
+skinparam Class {
+    HeaderBackgroundColor PaleGreen
+}
+skinparam TitleFontColor Sienna
+
+Header Address ER-diagram
+Title ER-diagram "Address Database"
+
+' ------------------------- Entities -------------------------
+entity "$setBold("Apartment")" as Apartment
+entity "$setBold("House")" as House
+entity "$setBold("Street")" as Street
+entity "$setBold("City")" as City
+entity "$setBold("Country")" as Country
+
+' ------------------------- Relations -------------------------
+Apartment   }o--||  House : "is in"
+House       }o--||  Street : "is on"
+Street      }o--||  City : "is in"
+City        }o--||  Country : "is in"
+
+' ------------------------- Legend -------------------------
+legend right
+$setBold("Symbols:")
+|| or o|    - one-to-one (optional - neccessary)
+|o or |{    - one-to-many (optional - neccessary)
+}o or |{    - many-to-many (optional - neccessary)
+}o--o{      - many-to-many (optional)
+end legend
+
+@enduml

@@ -1,0 +1,127 @@
+name: Autograding Tests
+on:
+  - push
+  - workflow_dispatch
+  - repository_dispatch
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      # Тесты для первой задачи (библиотека)
+      - name: Check library entities count
+        id: library-entities-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Количество сущностей (библиотека)"
+          command: "pytest .tests/test_erd.py -v -k test_entity_count"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      - name: Check library relationship types
+        id: library-relationships-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Типы связей (библиотека)"
+          command: "pytest .tests/test_erd.py -v -k test_relationship_types"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      # Тесты для второй задачи (адреса)
+      - name: Check address entities count
+        id: address-entities-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Количество сущностей (адреса)"
+          command: "pytest .tests/test_address_erd.py -v -k test_address_entity_count"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      - name: Check address relationship types
+        id: address-relationships-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Типы связей (адреса)"
+          command: "pytest .tests/test_address_erd.py -v -k test_address_relationship_types"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      # Тесты для третьей задачи (матчи)
+      - name: Check match entities count
+        id: match-entities-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Количество сущностей (матчи)"
+          command: "pytest .tests/test_match_erd.py -v -k test_match_entity_count"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      - name: Check match relationship types
+        id: match-relationships-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Типы связей (матчи)"
+          command: "pytest .tests/test_match_erd.py -v -k test_match_relationship_types"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      # Тесты для четвертой задачи (родители)
+      - name: Check parents entities count
+        id: parents-entities-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Количество сущностей (родители)"
+          command: "pytest .tests/test_parents_erd.py -v -k test_parents_entity_count"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      - name: Check parents relationship types
+        id: parents-relationships-test
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: "Типы связей (родители)"
+          command: "pytest .tests/test_parents_erd.py -v -k test_parents_relationship_types"
+          expected-output: "PASSED"
+          comparison-method: regex
+          timeout: 10
+
+      - name: Report Results
+        if: always()
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          LIBRARY_ENTITIES_TEST_RESULTS: ${{ steps.library-entities-test.outputs.result }}
+          LIBRARY_RELATIONSHIPS_TEST_RESULTS: ${{ steps.library-relationships-test.outputs.result }}
+          ADDRESS_ENTITIES_TEST_RESULTS: ${{ steps.address-entities-test.outputs.result }}
+          ADDRESS_RELATIONSHIPS_TEST_RESULTS: ${{ steps.address-relationships-test.outputs.result }}
+          MATCH_ENTITIES_TEST_RESULTS: ${{ steps.match-entities-test.outputs.result }}
+          MATCH_RELATIONSHIPS_TEST_RESULTS: ${{ steps.match-relationships-test.outputs.result }}
+          PARENTS_ENTITIES_TEST_RESULTS: ${{ steps.parents-entities-test.outputs.result }}
+          PARENTS_RELATIONSHIPS_TEST_RESULTS: ${{ steps.parents-relationships-test.outputs.result }}
+        with:
+          runners: "library-entities-test,library-relationships-test,address-entities-test,address-relationships-test,match-entities-test,match-relationships-test,parents-entities-test,parents-relationships-test"
